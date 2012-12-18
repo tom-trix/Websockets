@@ -50,9 +50,14 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
                         var bet = json.data >> 0;
                         if (_currentLot && bet > _currentBet && _clients[index].money >= bet) {
                             _currentWinner = index;
-                            _currentBet = bet;
-                            startTimer();
-                            broadcast({ type: 'rise', name: _clients[index].name, price: json.data });
+                            // если мгновенный выкуп - засчитываем победу сразу (иначе пускам таймер)
+                            if (bet > 3 * _currentBet)
+                                win(true);
+                            else {
+                                _currentBet = bet;
+                                broadcast({ type: 'rise', name: _clients[index].name, price: json.data });
+                                startTimer();
+                            }
                         }
                         break;
                     default:
@@ -75,16 +80,20 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
         clearInterval(_timer);
         _timer = setInterval(function() {
             broadcast({type: "timer", time : t});
-            // если таймер прошёл все t циклов, а счётчик ставок так и не увеличился - засчитываем победу
-            if (t-- == 0 && was === _riseCounter) {
-                var winner = _clients[_currentWinner];
-                winner.money -= _currentBet;
-                winner.connection.sendUTF(JSON.stringify({type: "money", money: winner.money}));
-                broadcast({ type:'winner', name: winner.name, lot: _currentLot});
-                _currentLot = false;
-                clearInterval(_timer);
-            }
+            // если таймер прошёл все t циклов, а счётчик ставок так и не увеличился - засчитываем обычную победу
+            if (t-- == 0 && was === _riseCounter) win(false);
         }, 2000);
+    }
+
+
+    // обработка выигрыша (immediately = мгновенный выкуп)
+    function win(immideately) {
+        var winner = _clients[_currentWinner];
+        winner.money -= _currentBet;
+        winner.connection.sendUTF(JSON.stringify({type: "money", money: winner.money}));
+        broadcast({ type:'winner', name: winner.name, lot: _currentLot, immediately: immideately});
+        _currentLot = false;
+        clearInterval(_timer);
     }
 
 

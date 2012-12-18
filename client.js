@@ -85,7 +85,7 @@ $(function () {
                 rised.removeAttr("style");
                 break;
             case "winner":
-                status.text((json.name !== myName ? json.name : "You") + " won " + json.lot + "!!!");
+                status.text((json.name !== myName ? json.name : "You") + " won " + json.lot + (json.immediately ? " before one could say knife!!!" : "!"));
                 bet.text("0");
                 win.attr("style", "visibility: hidden");
                 numberbox.val("5").focus();
