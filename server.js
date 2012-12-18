@@ -1,6 +1,7 @@
 // imports
 var webSocketServer = require('websocket').server;
 var http = require('http');
+var mongo = require('mongojs')
 var utils = require('./utils');
 
 
@@ -42,9 +43,16 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
                         broadcast({ type:'newClient', name: json.data });
                         break;
                     case "manager":
-                        _currentBet = json.price >> 0;
+                        console.log("111");
+                        var db = mongo.connect("46.146.231.100/Auction", ["goods"]);
+                        console.log("222");
+                        db.goods.find({}, function(err, page) {
+                            console.log(">>> " + JSON.stringify(page));
+                        });
+                        console.log("333");
+                        /*_currentBet = json.price >> 0;
                         _currentLot = json.data;
-                        broadcast({ type:'newLot', name: json.data, price: json.price });
+                        broadcast({ type:'newLot', name: json.data, price: json.price });*/
                         break;
                     case "rise":
                         var bet = json.data >> 0;
