@@ -1,0 +1,210 @@
+.status {
+    border-radius: 15px 16px 15px 15px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    left: 10px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 5px;
+    position: absolute;
+    text-shadow: 0 1px 0 #FFFFFF;
+    top: 10px;
+    vertical-align: middle;
+    width: 90%;
+    background: none repeat scroll 0 0 lightgreen;
+    border: 1px solid green;
+    color: #004400;
+    height: 8px;
+}
+
+.money {
+    border-radius: 12px 12px 12px 12px;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 800;
+    right: 50px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 15px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+    top: 50px;
+    vertical-align: middle;
+    width: 100px;
+    background: none repeat scroll 0 0 #66ffdd;
+    border: 4px solid #778899;
+    color: black;
+    height: 50px;
+}
+
+.moneyValue {
+    border-radius: 5px 6px 5px 5px;
+    display: inline-block;
+    font-size: 22px;
+    font-weight: bold;
+    right: 65px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 2px 5px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #112211;
+    top: 90px;
+    vertical-align: middle;
+    width: auto;
+    background: none repeat scroll 0 0 #66ffdd;
+    color: blue;
+}
+
+.lot {
+    border-radius: 5px 6px 5px 5px;
+    display: inline-block;
+    font-size: 40px;
+    font-weight: normal;
+    left: 40px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 15px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+    top: 50px;
+    vertical-align: middle;
+    width: auto;
+    background: none repeat scroll 0 0 #e0ffff;
+    border: 1px solid green;
+    color: #8b0000;
+}
+
+.bet {
+    border-radius: 5px 6px 5px 5px;
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 700;
+    right: 210px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 15px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 2px 0 #FFFF00;
+    top: 80px;
+    vertical-align: middle;
+    width: auto;
+    background: none repeat scroll 0 0 #c5e6c1;
+    border: 1px solid green;
+    color: black;
+}
+
+.owner {
+    border-radius: 5px 6px 5px 5px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    right: 210px;
+    line-height: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 3px 3px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+    top: 50px;
+    vertical-align: middle;
+    width: auto;
+    background: none repeat scroll 0 0 #d3d3d3;
+    border: 1px solid green;
+    color: red;
+}
+
+.time {
+    border-radius: 5px 6px 5px 5px;
+    cursor: wait;
+    display: inline-block;
+    font-size: 24px;
+    font-family: "Helvetica Neue Light";
+    font-style: italic;
+    font-weight: 900;
+    right: 60px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 15px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #339933;
+    bottom: 10px;
+    vertical-align: middle;
+    width: auto;
+    color: #2f1f1f;
+}
+
+.timeValue {
+    border-radius: 5px 6px 5px 5px;
+    cursor: wait;
+    display: inline-block;
+    font-size: 49px;
+    font-weight: 900;
+    right: 20px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 15px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 3px 0 #003300;
+    bottom: 4px;
+    vertical-align: middle;
+    width: auto;
+    color: red;
+}
+
+.inputHere {
+    border-radius: 5px 6px 5px 5px;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: normal;
+    bottom: 10px;
+    left: 20px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 10px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+    vertical-align: middle;
+    width: auto;
+    background: none repeat scroll 0 0 #bdd8e6;
+    border: 1px solid green;
+    color: black;
+    height: 30px;
+    width: 55%;
+}
+
+.textbox {
+    border-radius: 5px 6px 5px 5px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    left: 200px;
+    line-height: 100%;
+    margin: 0;
+    overflow: visible;
+    padding: 10px 15px;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #FFFFFF;
+    bottom: 15px;
+    vertical-align: middle;
+    background: none repeat scroll 0 0 #fafac7;
+    width: 25%;
+    color: black;
+}
