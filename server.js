@@ -48,7 +48,7 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
                         break;
                     case "rise":
                         var bet = json.data >> 0;
-                        if (_currentLot && bet > _currentBet) {
+                        if (_currentLot && bet > _currentBet && _clients[index].money >= bet) {
                             _currentWinner = index;
                             _currentBet = bet;
                             startTimer();
