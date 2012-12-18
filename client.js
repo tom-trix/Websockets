@@ -10,11 +10,14 @@ $(function () {
     var timeValue = $('#timeValue');
     var inputHere = $('#inputHere');
     var textbox = $('#textbox');
+    var numberbox = $('#numberbox');
 
     var started = $('.started');
-    var registered = $('div.registered');
+    var registered = $('.registered');
     var suggested = $('div.suggested');
     var rised = $('div.rised');
+    var planned = $('div.planned');
+    var win = $('div.win');
 
     var myName = false;
 
@@ -58,11 +61,12 @@ $(function () {
         //обработка в зависимости от типа сообщения
         switch (json.type) {
             case "money":
-                if (!myName) 
+                if (!myName)
                     myName = textbox.val();
-                textbox.val("").focus();
+                numberbox.val("5").focus();
                 inputHere.text("# " + myName);
                 moneyValue.text(json.money);
+                textbox.attr("style", "visibility: hidden");
                 registered.removeAttr("style");
                 break;
             case "newClient":
@@ -77,14 +81,18 @@ $(function () {
             case "rise":
                 status.text(json.name + " has rised the price up to: " + json.price);
                 bet.text(json.price);
-                owner.text(json.name !== myName ? json.name : "YOU").css('background-color', json.name !== myName ? "red": "green");
+                owner.text(json.name !== myName ? json.name : "YOU").css('background-color', json.name !== myName ? "red" : "green");
                 rised.removeAttr("style");
                 break;
             case "winner":
                 status.text((json.name !== myName ? json.name : "You") + " won " + json.lot + "!!!");
-                suggested.attr("style", "visibility: hidden");
-                rised.attr("style", "visibility: hidden");
-                textbox.val("").focus();
+                bet.text("0");
+                win.attr("style", "visibility: hidden");
+                numberbox.val("5").focus();
+                break;
+            case "timer":
+                timeValue.text(json.time);
+                planned.removeAttr("style");
                 break;
             default:
                 status.text("Unknown type: " + json.type);
@@ -92,15 +100,38 @@ $(function () {
     };
 
 
-    // обработка нажатия <Enter>
+    // обработка нажатия <Enter> в поле имени
     textbox.keydown(function(e) {
         if (e.keyCode !== 13) return;
         var msg = $(this).val();
         if (!msg) return;
-        if (myName)
-            connection.send(JSON.stringify({type: "rise", data: msg}));
-        else
-            connection.send(JSON.stringify({type: "auth", data: msg}));
+        if (msg.length > 10) {
+            msg = msg.substr(0, 10);
+            textbox.val(msg);
+            console.log("Name was reduced to 10 symbols");
+        }
+        connection.send(JSON.stringify({type: "auth", data: msg}));
+    });
+
+
+    // обработка нажатия <Enter> в числовом поле
+    numberbox.keydown(function(e) {
+        if (e.keyCode !== 13) return;
+        var msg = $(this).val();
+        if (!msg) return;
+        if (!jQuery.isNumeric(msg)) {
+            $(this).val("5");
+            return;
+        }
+        if ((msg >> 0) <= (bet.text() >> 0)) {
+            status.text('You number is too small');
+            return;
+        }
+        if ((msg >> 0) > (moneyValue.text() >> 0)) {
+            status.text("You haven't got enough money");
+            return;
+        }
+        connection.send(JSON.stringify({type: "rise", data: msg}));
     });
 
 

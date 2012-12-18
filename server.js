@@ -10,6 +10,7 @@ var _riseCounter = 0;
 var _currentWinner = -1;
 var _currentLot = "";
 var _currentBet = 0;
+var _timer = -1;
 
 
 //создаём http-сервер
@@ -31,7 +32,7 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
     connection.on('message', function(message) {
         if (message.type === 'utf8')
             try {
-                console.log("Message received: " + message.utf8Data);
+                console.log("> Message received: " + message.utf8Data);
                 var json = JSON.parse(message.utf8Data);
 
                 switch (json.type) {
@@ -47,10 +48,10 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
                         break;
                     case "rise":
                         var bet = json.data >> 0;
-                        if (bet > _currentBet) {
+                        if (_currentLot && bet > _currentBet) {
                             _currentWinner = index;
                             _currentBet = bet;
-                            go();
+                            startTimer();
                             broadcast({ type: 'rise', name: _clients[index].name, price: json.data });
                         }
                         break;
@@ -67,21 +68,29 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
         console.log((new Date()) + " Peer " + conn.remoteAddress + " disconnected.");
     });
 
-    // засекаем 8 секунд до победы
-    function go() {
+    // засекаем 14 секунд до победы (и каждые 2 сек. шлём время всем участникам)
+    function startTimer() {
         var was = ++_riseCounter;
-        setTimeout(function() {
-            if (was === _riseCounter) {
+        var t = 7;
+        clearInterval(_timer);
+        _timer = setInterval(function() {
+            broadcast({type: "timer", time : t});
+            // если таймер прошёл все t циклов, а счётчик ставок так и не увеличился - засчитываем победу
+            if (t-- == 0 && was === _riseCounter) {
                 var winner = _clients[_currentWinner];
                 winner.money -= _currentBet;
                 winner.connection.sendUTF(JSON.stringify({type: "money", money: winner.money}));
                 broadcast({ type:'winner', name: winner.name, lot: _currentLot});
+                _currentLot = false;
+                clearInterval(_timer);
             }
-        }, 8000);
+        }, 2000);
     }
+
 
     // рассылает сообщение всем
     function broadcast(obj) {
+        console.log(">  Broadcast sent : " + JSON.stringify(obj));
         for (var i = 0; i < _clients.length; i++)
             if (_clients[i].connection.connected)
                 _clients[i].connection.sendUTF(JSON.stringify(obj));
