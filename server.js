@@ -7,11 +7,20 @@ var utils = require('./utils');
 
 // global variables
 var _clients = [ ];
+var _lots = [ ];
 var _riseCounter = 0;
 var _currentWinner = -1;
-var _currentLot = "";
+var _currentLot = -1;
+var _isActive = false;
 var _currentBet = 0;
 var _timer = -1;
+
+
+// изъятие лотов из Монги
+var db = mongo.connect("46.146.231.100/Auction", ["goods"]);
+db.goods.find({}, function(err, page) {
+    _lots = page;
+});
 
 
 //создаём http-сервер
@@ -43,24 +52,23 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
                         broadcast({ type:'newClient', name: json.data });
                         break;
                     case "manager":
-                        console.log("111");
-                        var db = mongo.connect("46.146.231.100/Auction", ["goods"]);
-                        console.log("222");
-                        db.goods.find({}, function(err, page) {
-                            console.log(">>> " + JSON.stringify(page));
-                        });
-                        console.log("333");
-                        /*_currentBet = json.price >> 0;
-                        _currentLot = json.data;
-                        broadcast({ type:'newLot', name: json.data, price: json.price });*/
+                        _currentLot++;
+                        if (_currentLot < _lots.length) {
+                            _currentBet = _lots[_currentLot].price;
+                            _isActive = true;
+                            broadcast(_lots[_currentLot]);
+                        }
+                        else console.log("There are no lots left");
                         break;
                     case "rise":
                         var bet = json.data >> 0;
-                        if (_currentLot && bet > _currentBet && _clients[index].money >= bet) {
+                        if (_isActive && bet > _currentBet && _clients[index].money >= bet) {
                             _currentWinner = index;
                             // если мгновенный выкуп - засчитываем победу сразу (иначе пускам таймер)
-                            if (bet > 3 * _currentBet)
+                            if (bet > 3 * _currentBet) {
+                                _currentBet = bet;
                                 win(true);
+                            }
                             else {
                                 _currentBet = bet;
                                 broadcast({ type: 'rise', name: _clients[index].name, price: json.data });
@@ -99,8 +107,8 @@ new webSocketServer({httpServer: _server}).on('request', function(request) {
         var winner = _clients[_currentWinner];
         winner.money -= _currentBet;
         winner.connection.sendUTF(JSON.stringify({type: "money", money: winner.money}));
-        broadcast({ type:'winner', name: winner.name, lot: _currentLot, immediately: immideately});
-        _currentLot = false;
+        broadcast({ type:'winner', name: winner.name, lot: _lots[_currentLot].name, immediately: immideately});
+        _isActive = false;
         clearInterval(_timer);
     }
 

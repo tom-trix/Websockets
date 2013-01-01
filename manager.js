@@ -1,12 +1,8 @@
 $(function() {
-    var lot = $('#lot');
-    var price = $('#price');
-
-
     // check whether websockets are available
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     if (!window.WebSocket) {
-        alert("Ваш браузер говно");
+        alert("Your browser is shit!");
         return;
     }
 
@@ -24,12 +20,8 @@ $(function() {
     };
 
 
-    // define Enter-press handlers
-    var f = function(e) {
-        if (e.keyCode !== 13) return;
-        if (!lot.val() || !price.val()) return;
-        connection.send(JSON.stringify({type: "manager", data: lot.val(), price: price.val()}));
-    }
-    lot.keydown(f);
-    price.keydown(f);
+    // onClick handler
+    $('#lot').click(function(e) {
+        connection.send(JSON.stringify({type: "manager"}));
+    })
 })
